@@ -24,16 +24,19 @@ cd ~/repos/bonsai-amd-distrobox
 # 1. Build the container image (5–15 min, one-time)
 podman build -t bonsai-amd-distrobox:latest .
 
-# 2. Create the distrobox container
+# 2. Make sure the default directories exist
+mkdir -p ~/ai/bonsai
+
+# 3. Create the distrobox container
 distrobox assemble create --file distrobox.ini
 
-# 3. Download the three model files (~3.5 GB total, one-time, idempotent).
+# 4. Download the three model files (~3.5 GB total, one-time, idempotent).
 #    Defaults to ~/ai/bonsai/models. To use a different path:
 #      ./download-model.sh /path/to/models
 #    or set BONSAI_MODEL_DIR (read by both this script and start-server.sh).
 ./download-model.sh
 
-# 4. Start the server
+# 5. Start the server
 ./start-server.sh
 ```
 
