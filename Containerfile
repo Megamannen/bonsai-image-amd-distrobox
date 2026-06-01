@@ -16,6 +16,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         glslc \
         glslang-tools \
         spirv-headers \
+        gnupg \
+    && rm -rf /var/lib/apt/lists/*
+
+# Node 20 (required by the sd.cpp web frontend) + pnpm via corepack
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y --no-install-recommends nodejs \
+    && corepack enable \
     && rm -rf /var/lib/apt/lists/*
 
 RUN git clone https://github.com/leejet/stable-diffusion.cpp.git /opt/sd.cpp \
@@ -28,6 +35,7 @@ RUN cmake -S /opt/sd.cpp -B /opt/sd.cpp/build \
         -DCMAKE_BUILD_TYPE=Release \
         -DSD_VULKAN=ON \
         -DSD_BUILD_SERVER=ON \
+        -DSD_SERVER_BUILD_FRONTEND=ON \
     && cmake --build /opt/sd.cpp/build --parallel "$(nproc)" \
     && cmake --install /opt/sd.cpp/build --prefix=/usr/local \
     && rm -rf /opt/sd.cpp/build
