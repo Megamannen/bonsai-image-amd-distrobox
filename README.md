@@ -27,7 +27,10 @@ podman build -t bonsai-amd-distrobox:latest .
 # 2. Create the distrobox container
 distrobox assemble create --file distrobox.ini
 
-# 3. Download the three model files (~3.5 GB total, one-time, idempotent)
+# 3. Download the three model files (~3.5 GB total, one-time, idempotent).
+#    Defaults to ~/ai/bonsai/models. To use a different path:
+#      ./download-model.sh /path/to/models
+#    or set BONSAI_MODEL_DIR (read by both this script and start-server.sh).
 ./download-model.sh
 
 # 4. Start the server
@@ -73,6 +76,35 @@ set:
 
 If you only generate at 512×512 or 768×768, you can leave tiling off — those
 resolutions fit without it.
+
+## Storing models elsewhere
+
+By default both `download-model.sh` and `start-server.sh` look at
+`~/ai/bonsai/models/`. To use a different location, either pass it as an
+argument to `download-model.sh` or set `BONSAI_MODEL_DIR`:
+
+```bash
+export BONSAI_MODEL_DIR=/data/ai-models/bonsai
+./download-model.sh                # downloads there
+./start-server.sh                  # reads from there
+```
+
+**If your model directory is outside `~/ai/bonsai/`**, you must also mount it
+into the container so `sd-server` can read the files. Edit `distrobox.ini` and
+add a second `volume=` line (or replace the existing one) pointing at your
+chosen path, then recreate the container:
+
+```ini
+volume="/data/ai-models/bonsai:/data/ai-models/bonsai"
+```
+
+```bash
+distrobox rm -f bonsai-image
+distrobox assemble create --file distrobox.ini
+```
+
+Paths under `$HOME` are mounted automatically by distrobox, so a custom path
+inside your home directory doesn't need the manual mount.
 
 ## Layout
 

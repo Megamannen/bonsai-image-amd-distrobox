@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-MODEL_DIR="${HOME}/ai/bonsai/models"
+MODEL_DIR="${BONSAI_MODEL_DIR:-${HOME}/ai/bonsai/models}"
 DIFFUSION="${MODEL_DIR}/bonsai_image_4b-q1_0.gguf"
 VAE="${MODEL_DIR}/flux2_ae.safetensors"
 LLM="${MODEL_DIR}/Qwen_3_4b-imatrix-IQ4_XS.gguf"
