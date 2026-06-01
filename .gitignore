@@ -1,0 +1,4 @@
+tmp/
+*.gguf
+models/
+outputs/
